@@ -1,4 +1,4 @@
-<img src="https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png" width="150px" height="150px">
+<img src="https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png" width="150px" height="150px" align="center">
 
 # TCC
 Expressão Gênica no Cérebro Autista:
