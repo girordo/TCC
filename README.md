@@ -1,4 +1,4 @@
-![FMRP logo](https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png)
+<img src="https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png" align="center title="fmrp logo" />
 
 # TCC
 Expressão Gênica no Cérebro Autista:
