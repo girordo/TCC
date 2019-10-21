@@ -1,4 +1,5 @@
-![](https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png = 150x150)
+<img src="https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png" width="150px" height="150px">
+
 # TCC
 Expressão Gênica no Cérebro Autista:
 Reanálise de Dados Públicos em Busca de Robustez no Aprendizado de Máquina Não-supervisionado
