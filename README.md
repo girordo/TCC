@@ -1,3 +1,5 @@
+![alt text](https://ppgrdf.fmrp.usp.br/wp-content/uploads/sites/121/2016/10/Logo-FMRP-USP.jpg)
+
 # TCC
 Expressão Gênica no Cérebro Autista:
 Reanálise de Dados Públicos em Busca de Robustez no Aprendizado de Máquina Não-supervisionado
