@@ -10,3 +10,10 @@ ciências exatas e ciências médicas.
 ## Material de estudo
 Serão analisadas os datasets públicos do tipo .soft referentes ao artigo Transcriptomic analysis of autistic brain reveals convergent molecular pathology
 obtidos a partir do GEO Datasets.
+
+###Bibliotecas utilizadas
+```
+library(GEOquery)
+library(dplyr)
+library(pvclust)
+```
