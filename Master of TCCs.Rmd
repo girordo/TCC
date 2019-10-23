@@ -130,20 +130,17 @@ result_temporal = pvclust(dados[,temporal[,1]], method.dist="cor", method.hclust
 
 Próximos passos
 
-1) Plotar uma distribuição do desvio padrão // trocar
-2) Ordenar pelos 1000 primeiros genes
+1) Consertar os NA com média dos pacientes válidos
+2) Usar a seq do pvclust até 1.0
 3) Pela distribuição da variação
-4) ConsensusCluster
-5) Verificar número de réplicas do bootstrap entre 100 ~ 500 ~ 1000
-6) Aferir se o método de distância é correlação
-7) Aferir se o método de cluster é average
-8) Verificar se os gráficos estão corretos
+4) Como utilizar ConsensusCluster
+5) Testar com 100 replicações antes de tudo
+6) Método de distância é correlação
+7) Método de cluster é average
 9) PCA com todos os genes // mais informativo
-10) Subtrai autismo e controle
 11) ComplexHeatmap ler documentação
 12) Colocar labels heatmap
-13) Fazer histograma
-14) Colocar histograma no TCC
 15) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
 16) Baixar tabela suplementar
-17) Falar dos dados, idade, sexo, fenótipo e quadro clínico
+17) Ler dados da tabela suplementar e construir as ligações entre fenótipos e genótipos baseados no sexo, idade.
+18) Cortar os genes bottom pois não tem significância
