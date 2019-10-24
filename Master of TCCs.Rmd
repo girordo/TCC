@@ -97,7 +97,7 @@ head(gene)
 Não sei se está certo
 
 ```{r Bootstrap, warning=FALSE}
-resultado_pvclust = pvclust(dados_omit_NA[geneName,], method.dist="cor", method.hclust = "average", parallel=TRUE,nboot=1000)
+resultado_pvclust = pvclust(dados_omit_NA[geneName,], method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
 plot(resultado_pvclust)
 pvrect(resultado_pvclust, alpha=0.95)
 seplot(resultado_pvclust)
@@ -113,7 +113,6 @@ frontal = data.frame(dados.anota$geo_accession[22:53])
 temporal = data.frame(dados.anota$geo_accession[54:79])
 
 #Definindo o nome das colunas nos dataframes das respectivas amostras
-
 colnames(cerebellum) = "cerebellum"
 colnames(frontal) = "frontal"
 colnames(temporal) = "temporal"
