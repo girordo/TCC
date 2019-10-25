@@ -3,8 +3,8 @@
 </p>
 
 # TCC
-Expressão Gênica no Cérebro Autista:
-Reanálise de Dados Públicos em Busca de Robustez no Aprendizado de Máquina Não-supervisionado
+<p style="font-weight:bold;">Expressão Gênica no Cérebro Autista:
+Reanálise de Dados Públicos em Busca de Robustez no Aprendizado de Máquina Não-supervisionado</p>
 
 ## Objetivos
 O projeto tem como intuito melhorar as habilidades em bioinformática e análise de dados do aluno.
@@ -17,7 +17,11 @@ obtidos a partir do GEO Datasets.
 
 ### Bibliotecas utilizadas
 ```
+library(limma)
 library(GEOquery)
 library(dplyr)
 library(pvclust)
+library(HotDeckImputation)
+library(ConsensusClusterPlus)
+library(ComplexHeatmap)
 ```
