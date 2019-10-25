@@ -8,31 +8,40 @@ output: html_notebook
 Como primeiro passo rodar todas as bibliotecas necessárias para que o projeto se faça possível.
 
 ```{r Carregando bibliotecas, warning=FALSE}
+
 library(limma)
 library(GEOquery)
 library(dplyr)
 library(pvclust)
 library(HotDeckImputation)
 library(ConsensusClusterPlus)
+library(ComplexHeatmap)
+
 ```
 
 Obter os dados do artigo doi: 10.1038/nature10110 utilizando o GEOquery
 
 ```{r Obtendo dados, warning=FALSE}
+
 geo = getGEO('GSE28521', GSEMatrix = TRUE)
 geo = geo[[1]]
+
 ```
 
 Extração dos dados
 
 ```{r Extração dos dados, warning=FALSE}
+
 dados = exprs(geo)
+
 ```
 
 Gerando variável de anotação gênica
 
 ```{r Criação arquivo de anotação gênica, warning=FALSE}
+
 dados_anota = pData(geo)
+
 ```
 
 Faremos dois testes diferentes, um substituindo os valores NA pela média dos pacientes válidos e outro omitindo os NAs
@@ -43,103 +52,139 @@ Esperamos ver as diferenças entre os dois
 Substitui os valores NA pela média dos pacientes válidos
 
 ```{r Imputando valor da media, warning=FALSE}
+
 dados_media_NA = impute.mean(dados)
+
 ```
 
 Omite os valores NA
 
 ```{r Omitindo valores NA, warning=FALSE}
+
 dados_omit_NA = na.omit(dados)
+
 ```
 
 Cálculo da média, desvio padrão e coeficiente de variação utilizando a média dos pacientes
 
 ```{r Calculo com media valida dos pacientes, warning=FALSE}
+
 mean_with_NA <- apply(dados_media_NA,1,mean)
 sd_with_NA <- apply(dados_media_NA,1,sd)
 cv_with_NA <- sd_with_NA/mean_with_NA
+
 ```
 
 Cálculo da média, desvio padrão e coeficiente de variação com os dados com NA omitidos
 
 ```{r Calculo com os NAs omitidos, warning=FALSE}
+
 mean_with_omit_NA <- apply(dados_omit_NA,1,mean)
 sd_with_omit_NA <- apply(dados_omit_NA,1,sd)
 cv_with_omit_NA <- sd_with_omit_NA/mean_with_omit_NA
+
 ```
 
-Plot dos dados com a média dos pacientes válidos
+PCA Plot dos dados com a média dos pacientes válidos
 
-```{r}
-plot(mean_with_NA,cv_with_NA,main="Plot do CV vs Média da média de todos os pacientes válidos",xlab="Média",ylab="CV",col='red',cex=1, type="p")
+```{r PCA Plot dos dados com a média dos pacientes válidos, warning=FALSE}
+
+dados_pca <- prcomp(dados_media_NA)
+dados_pca_loads <- dados_pca$x[,1:2]
+plot(dados_pca_loads[,1], dados_pca_loads[,2], main="PCA")
+
 ```
 
-Plot dos dados com os NAs omitidos
+PCA Plot dos dados com os NAs omitidos
 
-```{r}
-plot(mean_with_omit_NA,cv_with_omit_NA,main="Plot CV vs Média com os valores NAs omitidos",xlab="Média",ylab="CV",col='red',cex=1, type="p")
+```{r PCA Plot dos dados com os NAs omitidos, warning=FALSE}
+
+dados_pca_omit <- prcomp(dados_omit_NA)
+dados_pca_omit_loads <- dados_pca_omit$x[,1:2]
+plot(dados_pca_omit_loads[,1], dados_pca_omit_loads[,2], main="PCA")
+
 ```
 
 Heatmap
 
 ```{r Matrix de Correlação, warning=FALSE}
+
 dados_cor <- as.matrix(cor(dados, use="complete.obs"))
 Heatmap(dados_cor)
+
 ```
 
-```{r Seleciona genes com desvio padrão maior que cinco, warning=FALSE}
-gene = which(sd_with_omit_NA > 0.5)
+Gene bottom cut
+
+```{r Seleciona genes com desvio padrão maior que 0.2054, warning=FALSE}
+
+gene = which(sd_with_omit_NA > 0.2054) #Fiz na mão, olhando apenas os dados
 geneName = rownames(dados_omit_NA)[gene]
-head(gene)
+
 ```
 
 
-Não sei se está certo
+PVClust Bootstrap para todos os dados com NA omitidos
 
 ```{r Bootstrap, warning=FALSE}
+
 resultado_pvclust = pvclust(dados_omit_NA[geneName,], method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
 plot(resultado_pvclust)
 pvrect(resultado_pvclust, alpha=0.95)
 seplot(resultado_pvclust)
 seplot(resultado_pvclust, identify=TRUE)
+
 ```
 
 
-Definindo os grupos por amostras
+Definindo os grupos por amostras de tecidos
 
 ```{r Definindo grupos, warning=FALSE}
-cerebellum = data.frame(dados.anota$geo_accession[0:21])
-frontal = data.frame(dados.anota$geo_accession[22:53])
-temporal = data.frame(dados.anota$geo_accession[54:79])
+
+cerebellum = data.frame(dados_anota$geo_accession[0:21])
+frontal = data.frame(dados_anota$geo_accession[22:53])
+temporal = data.frame(dados_anota$geo_accession[54:79])
 
 #Definindo o nome das colunas nos dataframes das respectivas amostras
+
 colnames(cerebellum) = "cerebellum"
 colnames(frontal) = "frontal"
 colnames(temporal) = "temporal"
+
 ```
 
 
-PVclust das labels(label para categorização das amostras)
+PVclust feito por tecidos com os dados com NAs omitidos
 
 ```{r PVclust, warning=FALSE}
-result_cerebellum = pvclust(dados[,cerebellum[,1]], method.dist="cor", method.hclust="average", nboot=1000)
-result_frontal = pvclust(dados[,frontal[,1]], method.dist="cor", method.hclust="average", nboot=1000)
-result_temporal = pvclust(dados[,temporal[,1]], method.dist="cor", method.hclust="average", nboot=1000)
+
+result_cerebellum = pvclust(dados_omit_NA[,cerebellum[,1]], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
+plot(result_cerebellum)
+pvrect(result_cerebellum, alpha=0.95)
+seplot(result_cerebellum)
+
+result_frontal = pvclust(dados_omit_NA[,frontal[,1]], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
+plot(result_frontal)
+pvrect(result_frontal, alpha=0.95)
+seplot(result_frontal)
+
+
+result_temporal = pvclust(dados_omit_NA[,temporal[,1]], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
+plot(result_temporal)
+pvrect(result_temporal, alpha=0.95)
+seplot(result_temporal)
+
 ```
 
 Próximos passos
 
 1) Consertar os NA com média dos pacientes válidos
-2) Usar a seq do pvclust até 1.0
-3) Pela distribuição da variação
-4) Como utilizar ConsensusCluster
-5) Testar com 100 replicações antes de tudo
-6) Método de distância é correlação
-7) Método de cluster é average
-9) PCA com todos os genes // mais informativo
-11) ComplexHeatmap ler documentação
-12) Colocar labels heatmap
-15) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
-16) Baixar tabela suplementar
-17) Ler dados da tabela suplementar e construir as ligações entre fenótipos e genótipos baseados no sexo, idade.
-18) Cortar os genes bottom pois não tem significância
+2) Verificar se o PCA está certo
+3) Utilizar ConsensusClusterPlus?
+4) Método de distância é correlação
+5) Método de cluster é average
+6) ComplexHeatmap ler documentação
+7) Colocar labels heatmap
+8) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
+9) Cortar os genes bottom pois não tem significância
+10) Ler dados da tabela suplementar e construir as ligações entre fenótipos e genótipos baseados no sexo, idade.
