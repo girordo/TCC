@@ -47,7 +47,7 @@ dados_anota = pData(geo)
 Faremos dois testes diferentes, um substituindo os valores NA pela média dos pacientes válidos e outro omitindo os NAs
 Como os grupos são altamente estratificados como apresentado no artigo, supomos que talvez com a média apareçam grupos mais próximos.
 Também rodamos omitindo os valores NA pois é o protocolo padrão numa análise.
-Esperamos ver as diferenças entre os dois
+Esperamos ver as diferenças entre os dois.
 
 Substitui os valores NA pela média dos pacientes válidos
 
@@ -56,6 +56,16 @@ Substitui os valores NA pela média dos pacientes válidos
 dados_media_NA = impute.mean(dados)
 
 ```
+
+Consertando os nomes dos genes(linhas) pois a função impute.mean os remove
+
+```{r Consertando os nomes dos genes e das probes}
+
+geneNamesGeneral = rownames(dados)
+probesNamesGeneral = colnames(dados)
+
+```
+
 
 Omite os valores NA
 
@@ -114,7 +124,7 @@ Heatmap(dados_cor)
 
 ```
 
-Gene bottom cut
+Gene bottom cut do desvio padrão calculado a partir dos dados com NA omitido
 
 ```{r Seleciona genes com desvio padrão maior que 0.2054, warning=FALSE}
 
