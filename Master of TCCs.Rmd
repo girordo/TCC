@@ -16,6 +16,7 @@ library(pvclust)
 library(HotDeckImputation)
 library(ConsensusClusterPlus)
 library(ComplexHeatmap)
+library(ggplot2)
 
 ```
 
@@ -35,6 +36,22 @@ Extração dos dados
 dados = exprs(geo)
 
 ```
+
+Novo tipo de anotação
+
+```{r Novo tipo de anotação, warning=FALSE}
+
+anotacao = cbind(dados_anota[,1:2], dados_anota[,33:34])
+anotacao$geo_accession = as.character(anotacao$geo_accession)
+anotacao$`disease status:ch1` = as.character(anotacao$`disease status:ch1`)
+anotacao$`tissue (brain region):ch1` = as.character(anotacao$`tissue (brain region):ch1`)
+
+#Ou assim
+
+anno = cbind(pData(geo)[, 1:2], pData(geo)[,33:34])
+
+```
+
 
 Gerando variável de anotação gênica
 
@@ -103,6 +120,19 @@ dados_pca <- prcomp(dados_media_NA)
 dados_pca_loads <- dados_pca$x[,1:2]
 plot(dados_pca_loads[,1], dados_pca_loads[,2], main="PCA")
 
+#PCA mais bonito e mais organizado
+
+pca = prcomp(t(dados_media_NA))
+ggplot(data= data.frame(pca$x[,1:2]),
+       aes(x = PC1, y = PC2, color= anno$`tissue (brain region):ch1`, 
+                             shape = anno$`disease status:ch1`,
+                             label = anno$geo_accession)) +
+  geom_point(size = 3) + 
+  xlab(paste0("PC1 ", prettyNum(summary(pca)$importance[2,1]*100,
+                                digits = 2, decimal.mark = "."), "%")) +
+  ylab(paste0("PC2 ", prettyNum(summary(pca)$importance[2,2]*100,
+                                digits = 2, decimal.mark = "."), "%")) 
+
 ```
 
 PCA Plot dos dados com os NAs omitidos
@@ -113,6 +143,19 @@ dados_pca_omit <- prcomp(dados_omit_NA)
 dados_pca_omit_loads <- dados_pca_omit$x[,1:2]
 plot(dados_pca_omit_loads[,1], dados_pca_omit_loads[,2], main="PCA")
 
+#PCA mais bonito e mais organizado
+
+pca = prcomp(t(dados_omit_NA))
+ggplot(data= data.frame(pca$x[,1:2]),
+       aes(x = PC1, y = PC2, color= anno$`tissue (brain region):ch1`, 
+                             shape = anno$`disease status:ch1`,
+                             label = anno$geo_accession)) +
+  geom_point(size = 3) + 
+  xlab(paste0("PC1 ", prettyNum(summary(pca)$importance[2,1]*100,
+                                digits = 2, decimal.mark = "."), "%")) +
+  ylab(paste0("PC2 ", prettyNum(summary(pca)$importance[2,2]*100,
+                                digits = 2, decimal.mark = "."), "%")) 
+
 ```
 
 Heatmap
@@ -120,7 +163,7 @@ Heatmap
 ```{r Matrix de Correlação, warning=FALSE}
 
 dados_cor <- as.matrix(cor(dados, use="complete.obs"))
-Heatmap(dados_cor)
+Heatmap(dados_cor, column_title_gp = gpar(fontsize = 8), row_title_gp = gpar(fontsize = 8))
 
 ```
 
@@ -186,8 +229,21 @@ seplot(result_temporal)
 
 ```
 
+order.all = t(scale(t(dados)))
+Heatmap(order.all, 
+        cluster_columns = F, 
+        cluster_rows = T,
+        show_row_names = F, 
+        row_names_gp = gpar(fontsize = 5),
+        show_column_names = FALSE, 
+        name = "Expression", 
+        column_title = "Heatmap ANNOVA - Groups",
+        top_annotation = dh
+)
+
 Próximos passos
 
+0) Usar a função t() no PCA e no Heatmap?
 1) Consertar os NA com média dos pacientes válidos
 2) Verificar se o PCA está certo
 3) Utilizar ConsensusClusterPlus?
