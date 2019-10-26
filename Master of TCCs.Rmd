@@ -9,7 +9,6 @@ Como primeiro passo rodar todas as bibliotecas necessárias para que o projeto s
 
 ```{r Carregando bibliotecas, warning=FALSE}
 
-library(limma)
 library(GEOquery)
 library(dplyr)
 library(pvclust)
@@ -167,7 +166,9 @@ PVClust Bootstrap para todos os dados com NAs omitidos
 ```{r Bootstrap para todos os dados com NAs omitidos, warning=FALSE}
 
 #set.seed(123)
-resultado_pvclust = pvclust(dados_omit_NA[geneName,], method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
+aux = dados_omit_NA
+colnames(aux) = anno$`tissue (brain region):ch1`
+resultado_pvclust = pvclust(aux, method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
 plot(resultado_pvclust)+
 pvrect(resultado_pvclust, alpha=0.95)+
 seplot(resultado_pvclust)
