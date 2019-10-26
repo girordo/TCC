@@ -37,27 +37,14 @@ dados = exprs(geo)
 
 ```
 
-Novo tipo de anotação
+Gerando variável com anotação gênica necessária
 
 ```{r Novo tipo de anotação, warning=FALSE}
 
-anotacao = cbind(dados_anota[,1:2], dados_anota[,33:34])
-anotacao$geo_accession = as.character(anotacao$geo_accession)
-anotacao$`disease status:ch1` = as.character(anotacao$`disease status:ch1`)
-anotacao$`tissue (brain region):ch1` = as.character(anotacao$`tissue (brain region):ch1`)
-
-#Ou assim
-
 anno = cbind(pData(geo)[, 1:2], pData(geo)[,33:34])
-
-```
-
-
-Gerando variável de anotação gênica
-
-```{r Criação arquivo de anotação gênica, warning=FALSE}
-
-dados_anota = pData(geo)
+anno$geo_accession = as.character(anno$geo_accession)
+anno$"disease status:ch1" = as.character(anno$"disease status:ch1")
+anno$"tissue (brain region):ch1" = as.character(anno$"tissue (brain region):ch1")
 
 ```
 
@@ -82,7 +69,6 @@ geneNamesGeneral = rownames(dados)
 probesNamesGeneral = colnames(dados)
 
 ```
-
 
 Omite os valores NA
 
@@ -112,20 +98,16 @@ cv_with_omit_NA <- sd_with_omit_NA/mean_with_omit_NA
 
 ```
 
+Para ter uma primeira noção de como os dados se separam entre os grupos, uma forma não-supervisionada é realizar um PCA (Análise de Componentes Principais) onde com os 2 principais componentes mais variantes é possível observar como os grupos se clusterizam.
+
 PCA Plot dos dados com a média dos pacientes válidos
 
 ```{r PCA Plot dos dados com a média dos pacientes válidos, warning=FALSE}
 
-dados_pca <- prcomp(dados_media_NA)
-dados_pca_loads <- dados_pca$x[,1:2]
-plot(dados_pca_loads[,1], dados_pca_loads[,2], main="PCA")
-
-#PCA mais bonito e mais organizado
-
 pca = prcomp(t(dados_media_NA))
 ggplot(data= data.frame(pca$x[,1:2]),
-       aes(x = PC1, y = PC2, color= anno$`tissue (brain region):ch1`, 
-                             shape = anno$`disease status:ch1`,
+       aes(x = PC1, y = PC2, color= anno$"tissue (brain region):ch1", 
+                             shape = anno$"disease status:ch1",
                              label = anno$geo_accession)) +
   geom_point(size = 3) + 
   xlab(paste0("PC1 ", prettyNum(summary(pca)$importance[2,1]*100,
@@ -139,16 +121,10 @@ PCA Plot dos dados com os NAs omitidos
 
 ```{r PCA Plot dos dados com os NAs omitidos, warning=FALSE}
 
-dados_pca_omit <- prcomp(dados_omit_NA)
-dados_pca_omit_loads <- dados_pca_omit$x[,1:2]
-plot(dados_pca_omit_loads[,1], dados_pca_omit_loads[,2], main="PCA")
-
-#PCA mais bonito e mais organizado
-
 pca = prcomp(t(dados_omit_NA))
 ggplot(data= data.frame(pca$x[,1:2]),
-       aes(x = PC1, y = PC2, color= anno$`tissue (brain region):ch1`, 
-                             shape = anno$`disease status:ch1`,
+       aes(x = PC1, y = PC2, color= anno$"tissue (brain region):ch1", 
+                             shape = anno$"disease status:ch1",
                              label = anno$geo_accession)) +
   geom_point(size = 3) + 
   xlab(paste0("PC1 ", prettyNum(summary(pca)$importance[2,1]*100,
@@ -158,12 +134,22 @@ ggplot(data= data.frame(pca$x[,1:2]),
 
 ```
 
-Heatmap
+Heatmap com todos os dados
+Não é necessária um heatmap feito com os NAs omitidos pois a função já omite automaticamente
 
-```{r Matrix de Correlação, warning=FALSE}
+```{r Matrix de Correlação todos os dados, warning=FALSE}
 
 dados_cor <- as.matrix(cor(dados, use="complete.obs"))
-Heatmap(dados_cor, column_title_gp = gpar(fontsize = 8), row_title_gp = gpar(fontsize = 8))
+Heatmap(dados_cor)
+
+```
+
+Heatmap com os dados com a média dos pacientes válidos
+
+```{r Matrix de Correlação com média dos pacientes válidos, warning=FALSE}
+
+dados_cor2 <- as.matrix(cor(dados_media_NA, use="complete.obs"))
+Heatmap(dados_cor2)
 
 ```
 
@@ -176,19 +162,17 @@ geneName = rownames(dados_omit_NA)[gene]
 
 ```
 
+PVClust Bootstrap para todos os dados com NAs omitidos
 
-PVClust Bootstrap para todos os dados com NA omitidos
+```{r Bootstrap para todos os dados com NAs omitidos, warning=FALSE}
 
-```{r Bootstrap, warning=FALSE}
-
+#set.seed(123)
 resultado_pvclust = pvclust(dados_omit_NA[geneName,], method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
-plot(resultado_pvclust)
-pvrect(resultado_pvclust, alpha=0.95)
+plot(resultado_pvclust)+
+pvrect(resultado_pvclust, alpha=0.95)+
 seplot(resultado_pvclust)
-seplot(resultado_pvclust, identify=TRUE)
 
 ```
-
 
 Definindo os grupos por amostras de tecidos
 
@@ -206,44 +190,30 @@ colnames(temporal) = "temporal"
 
 ```
 
-
 PVclust feito por tecidos com os dados com NAs omitidos
 
 ```{r PVclust, warning=FALSE}
 
 result_cerebellum = pvclust(dados_omit_NA[,cerebellum[,1]], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
-plot(result_cerebellum)
+plot(result_cerebellum)+
 pvrect(result_cerebellum, alpha=0.95)
 seplot(result_cerebellum)
 
 result_frontal = pvclust(dados_omit_NA[,frontal[,1]], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
-plot(result_frontal)
+plot(result_frontal)+
 pvrect(result_frontal, alpha=0.95)
 seplot(result_frontal)
 
 
 result_temporal = pvclust(dados_omit_NA[,temporal[,1]], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
-plot(result_temporal)
+plot(result_temporal)+
 pvrect(result_temporal, alpha=0.95)
 seplot(result_temporal)
 
 ```
 
-order.all = t(scale(t(dados)))
-Heatmap(order.all, 
-        cluster_columns = F, 
-        cluster_rows = T,
-        show_row_names = F, 
-        row_names_gp = gpar(fontsize = 5),
-        show_column_names = FALSE, 
-        name = "Expression", 
-        column_title = "Heatmap ANNOVA - Groups",
-        top_annotation = dh
-)
-
 Próximos passos
 
-0) Usar a função t() no PCA e no Heatmap?
 1) Consertar os NA com média dos pacientes válidos
 2) Verificar se o PCA está certo
 3) Utilizar ConsensusClusterPlus?
@@ -254,3 +224,5 @@ Próximos passos
 8) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
 9) Cortar os genes bottom pois não tem significância
 10) Ler dados da tabela suplementar e construir as ligações entre fenótipos e genótipos baseados no sexo, idade.
+11) Por que não está funcionando o esquema de trocar os nomes das amostras pelos tipos de doença
+12) Parpvclust e nodePar
