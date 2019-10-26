@@ -17,7 +17,6 @@ obtidos a partir do GEO Datasets.
 
 ### Bibliotecas utilizadas
 ```
-library(limma)
 library(GEOquery)
 library(dplyr)
 library(pvclust)
