@@ -57,16 +57,6 @@ Substitui os valores NA pela média dos pacientes válidos
 dados_media_NA = impute.mean(dados)
 
 ```
-
-Consertando os nomes dos genes(linhas) pois a função impute.mean os remove
-
-```{r Consertando os nomes dos genes e das probes}
-
-geneNamesGeneral = rownames(dados)
-probesNamesGeneral = colnames(dados)
-
-```
-
 Omite os valores NA
 
 ```{r Omitindo valores NA, warning=FALSE}
