@@ -213,6 +213,6 @@ seplot(result_temporal)
 
 Próximos passos
 
-4) Método de distância é correlação e testar com outros métodos
-5) Método de cluster é average e testar com outros métodos
-8) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
+1) Método de distância é correlação e testar com outros métodos
+2) Método de cluster é average e testar com outros métodos
+3) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
