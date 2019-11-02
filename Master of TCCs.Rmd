@@ -13,8 +13,6 @@ library(GEOquery)
 library(dplyr)
 library(pvclust)
 library(HotDeckImputation)
-library(ConsensusClusterPlus)
-library(ComplexHeatmap)
 library(ggplot2)
 
 ```
@@ -215,14 +213,6 @@ seplot(result_temporal)
 
 Próximos passos
 
-1) Consertar os NA com média dos pacientes válidos
-3) Utilizar ConsensusClusterPlus?
-4) Método de distância é correlação
-5) Método de cluster é average
-6) ComplexHeatmap ler documentação
-7) Colocar labels heatmap
+4) Método de distância é correlação e testar com outros métodos
+5) Método de cluster é average e testar com outros métodos
 8) Filtragem de dados de acordo com o capacidade computacional e tempo, pega o que mais varia pois provavelmente são os que estão mais associados com autismos
-9) Cortar os genes bottom pois não tem significância // Verificar se esta certo
-10) Ler dados da tabela suplementar e construir as ligações entre fenótipos e genótipos baseados no sexo, idade.
-12) Parpvclust e nodePar
-13) Ler PDF com R
