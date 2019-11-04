@@ -130,7 +130,7 @@ PVClust Bootstrap para todos os dados com NAs omitidos
 #set.seed(123)
 aux = dados_omit_NA
 colnames(aux) = anno$`tissue (brain region):ch1`
-resultado_pvclust = pvclust(aux, method.dist="euclidean", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
+resultado_pvclust = pvclust(aux, method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
 plot(resultado_pvclust)+
 pvrect(resultado_pvclust, alpha=0.95)+
 seplot(resultado_pvclust)
