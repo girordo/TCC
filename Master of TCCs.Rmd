@@ -91,7 +91,7 @@ PCA Plot dos dados com os NAs omitidos
 
 ```{r PCA Plot dos dados com os NAs omitidos, warning=FALSE}
 pca = prcomp(t(dados_omit_NA))
-ggplot(data= data.frame(pca$x[,1:2]),
+ggplot(data = data.frame(pca$x[,1:2]),
        aes(x = PC1, y = PC2, color= anno$"tissue (brain region):ch1", 
                              shape = anno$"disease status:ch1",
                              label = anno$geo_accession)) +
@@ -130,6 +130,12 @@ PVClust Bootstrap para todos os dados com NAs omitidos
 #set.seed(123)
 aux = dados_omit_NA
 colnames(aux) = anno$`tissue (brain region):ch1`
+colnames(aux)[0:10] <- "Cerebellum A"
+colnames(aux)[11:21] <- "Cerebellum C"
+colnames(aux)[22:37] <- "Frontal A"
+colnames(aux)[38:53] <- "Frontal C"
+colnames(aux)[54:67] <- "Temporal A"
+colnames(aux2)[68:79] <- "Temporal C"
 resultado_pvclust = pvclust(aux, method.dist="cor", method.hclust = "average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
 plot(resultado_pvclust)+
 pvrect(resultado_pvclust, alpha=0.95)+
@@ -140,7 +146,7 @@ PVclust feito por tecidos com os dados com NAs omitidos
 
 ```{r PVclust, warning=FALSE}
 result_cerebellum = pvclust(aux[,0:21], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
-plot(result_cerebellum)+
+plot(result_cerebellum)
 pvrect(result_cerebellum, alpha=0.95)
 seplot(result_cerebellum)
 result_frontal = pvclust(aux[,22:53], method.dist="cor", method.hclust="average", nboot=1000, parallel=TRUE, r=seq(.5, 1.0, by=.1))
