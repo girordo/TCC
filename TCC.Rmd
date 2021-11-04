@@ -4,7 +4,7 @@ author: Tarcísio Giroldo Siqueira
 date: September 24, 2019
 output: html_notebook
   html_document:
-    css: style.css
+    css: assets/css/style.css
 ---
 
 Como primeiro passo rodar todas as bibliotecas necessárias para que o projeto se faça possível.
