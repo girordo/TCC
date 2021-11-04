@@ -4,16 +4,4 @@
 
 <h1 align="center">Final paper</h1>
 
-# Reanalysis of public data from brain tissues about autism spectrum disorder(ASD)
-
-# Content table
-
-<!--ts-->
-
-- [Purpose](#purpose)
-- [Methods](#methods)
-- [Results](#results)
-- [Conclusions](#conclusions)
-
-<!--te-->
-
+<h1 align="center">Reanalysis of public data from brain tissues about autism spectrum disorder(ASD)</h1>
