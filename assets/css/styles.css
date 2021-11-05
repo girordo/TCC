@@ -5,25 +5,23 @@
 }
 
 html {
+  font-family: Consolas, Sans-Serif;
   font-size: 10px;
 }
 
 p {
   font-size: 1.2em;
-  font-family: 'Arial'
   text-align: justify;
   line-height: 1.74em;
 }
 
 h1 {
   font-size: 2em;
-  font-family: 'Arial';
   font-weight: 700;
 }
 
 h2 {
   font-size: 1.6em;
-  font-family: 'Arial';
   font-weight: 600;
 }
 
