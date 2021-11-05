@@ -1,5 +1,5 @@
 <section align="center">
-  <img src="https://sites.usp.br/fmrpnew/wp-content/uploads/sites/356/2018/05/Brasao_Flamula.png" width="150px" height="150px">
+  <img src="https://github.com/girordo/TCC/blob/master/assets/img/fmrp.jpg" alt="Faculdade de Medicina de Ribeirão Preto">
 </section>
 
 <h1 align="center">Final paper</h1>
